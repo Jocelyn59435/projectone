@@ -8,9 +8,6 @@ var index_1 = __importDefault(require("./routes/index"));
 var port = 5000;
 var app = express_1.default();
 app.use('/api', index_1.default);
-// app.get('/', (req, res) => {
-//   res.send('Connected.');
-// });
 app.listen(port, function () {
     console.log("Listening on " + port);
 });

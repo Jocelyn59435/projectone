@@ -6,10 +6,6 @@ const app = express();
 
 app.use('/api', routes);
 
-// app.get('/', (req, res) => {
-//   res.send('Connected.');
-// });
-
 app.listen(port, () => {
   console.log(`Listening on ${port}`);
 });
