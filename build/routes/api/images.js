@@ -40,105 +40,76 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var sharp_1 = __importDefault(require("sharp"));
 var fs_1 = __importDefault(require("fs"));
-var image_size_1 = __importDefault(require("image-size"));
+var utilone_1 = require("../../utils/utilone");
 var images = express_1.default.Router();
+// process get request from images route
 images.get('/', function (req, res) {
     var queryPara = req.query;
+    // get parameters from get request
     var filename = queryPara.filename;
     var width = parseInt(queryPara.width);
     var height = parseInt(queryPara.height);
-    if (fs_1.default.existsSync("./assets/thumb/" + filename + "_resize.jpg")) {
-        var img_1 = fs_1.default.readFileSync("./assets/thumb/" + filename + "_resize.jpg");
-        (function () { return __awaiter(void 0, void 0, void 0, function () {
-            var dimensions, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, image_size_1.default(img_1)];
-                    case 1:
-                        dimensions = _a.sent();
-                        if (dimensions.width == width && dimensions.height == height) {
-                            res.end(img_1, 'binary');
+    // define paths for full image and thumb image
+    var fullPath = "./assets/full/" + filename + ".jpg";
+    var thumbPath = "./assets/thumb/" + filename + "_resize.jpg";
+    console.log(req.originalUrl);
+    // first check whether the file exists or not
+    if (utilone_1.checkFile(thumbPath)) {
+        var img = utilone_1.getFile(thumbPath);
+        var dimensions = utilone_1.getDimensions(img);
+        // if file exists, check wheter the current size is the same as the requested one
+        if (dimensions.width == width && dimensions.height == height) {
+            // if the size is same, just send the buffered one
+            res.end(img, 'binary');
+        }
+        else {
+            // if the size is not the same, delete the previous one and crop a new one
+            utilone_1.deleteFile(thumbPath);
+            (function () {
+                return __awaiter(this, void 0, void 0, function () {
+                    var img_1, error_1;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                // crop, save and send the image
+                                return [4 /*yield*/, utilone_1.cropImage(fullPath, thumbPath, width, height)];
+                            case 1:
+                                // crop, save and send the image
+                                _a.sent();
+                                img_1 = fs_1.default.readFileSync("./assets/thumb/" + filename + "_resize.jpg");
+                                res.end(img_1, 'binary');
+                                return [3 /*break*/, 3];
+                            case 2:
+                                error_1 = _a.sent();
+                                console.log(error_1);
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
                         }
-                        else {
-                            (function () {
-                                return __awaiter(this, void 0, void 0, function () {
-                                    var error_1;
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0:
-                                                _a.trys.push([0, 2, , 3]);
-                                                return [4 /*yield*/, fs_1.default.unlink("./assets/thumb/" + filename + "_resize.jpg", function (err) { return console.log(err); })];
-                                            case 1:
-                                                _a.sent();
-                                                return [3 /*break*/, 3];
-                                            case 2:
-                                                error_1 = _a.sent();
-                                                console.log(error_1);
-                                                return [3 /*break*/, 3];
-                                            case 3: return [2 /*return*/];
-                                        }
-                                    });
-                                });
-                            })();
-                            (function () {
-                                return __awaiter(this, void 0, void 0, function () {
-                                    var img_2, error_2;
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0:
-                                                _a.trys.push([0, 2, , 3]);
-                                                return [4 /*yield*/, sharp_1.default("./assets/full/" + filename + ".jpg")
-                                                        .resize(width, height)
-                                                        .toFile("./assets/thumb/" + filename + "_resize.jpg")];
-                                            case 1:
-                                                _a.sent();
-                                                img_2 = fs_1.default.readFileSync("./assets/thumb/" + filename + "_resize.jpg");
-                                                res.end(img_2, 'binary');
-                                                return [3 /*break*/, 3];
-                                            case 2:
-                                                error_2 = _a.sent();
-                                                console.log(error_2);
-                                                return [3 /*break*/, 3];
-                                            case 3: return [2 /*return*/];
-                                        }
-                                    });
-                                });
-                            })();
-                        }
-                        ;
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_1 = _a.sent();
-                        console.error(err_1);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); })();
+                    });
+                });
+            })();
+        }
     }
     else {
+        // if the file does not exist, crop, save and send the image
         (function () {
             return __awaiter(this, void 0, void 0, function () {
-                var img, error_3;
+                var img, error_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             _a.trys.push([0, 2, , 3]);
-                            return [4 /*yield*/, sharp_1.default("./assets/full/" + filename + ".jpg")
-                                    .resize(width, height)
-                                    .toFile("./assets/thumb/" + filename + "_resize.jpg")];
+                            return [4 /*yield*/, utilone_1.cropImage(fullPath, thumbPath, width, height)];
                         case 1:
                             _a.sent();
-                            img = fs_1.default.readFileSync("./assets/thumb/" + filename + "_resize.jpg");
+                            img = utilone_1.getFile(thumbPath);
                             res.end(img, 'binary');
                             return [3 /*break*/, 3];
                         case 2:
-                            error_3 = _a.sent();
-                            console.log(error_3);
+                            error_2 = _a.sent();
+                            console.log(error_2);
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
                     }
