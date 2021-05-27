@@ -1,10 +1,9 @@
 import routes from '../routes/index';
 import fs from 'fs';
-import images from '../routes/api/images';
+import app from '../index';
 import supertest from 'supertest';
 
-const requestOne = supertest(images);
-const requestTwo = supertest(routes);
+const request = supertest(app);
 
 import {
   checkFile,
@@ -45,14 +44,14 @@ it('expects to be resolved', async () => {
 
 describe('Test endpoint response', () => {
   it('gets the api endpoint', async done => {
-    const response = await requestTwo.get('/');
+    const response = await request.get('/api');
     expect(response.status).toBe(200);
     done();
   });
 
   it('gets the images endpoint', async done => {
-    const response = await requestOne.get(
-      '/?filename=flower6&width=300&height=600'
+    const response = await request.get(
+      '/api/images?filename=flower6&width=300&height=600'
     );
     expect(response.status).toBe(200);
     done();
