@@ -53,7 +53,6 @@ images.get('/', function (req, res) {
     // define paths for full image and thumb image
     var fullPath = "./assets/full/" + filename + ".jpg";
     var thumbPath = "./assets/thumb/" + filename + "_resize.jpg";
-    console.log(req.originalUrl);
     // first check whether the file exists or not
     if (utilone_1.checkFile(thumbPath)) {
         var img = utilone_1.getFile(thumbPath);

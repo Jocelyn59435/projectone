@@ -39,9 +39,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var index_1 = __importDefault(require("../routes/index"));
 var images_1 = __importDefault(require("../routes/api/images"));
 var supertest_1 = __importDefault(require("supertest"));
-var request = supertest_1.default(images_1.default);
+var requestOne = supertest_1.default(images_1.default);
+var requestTwo = supertest_1.default(index_1.default);
 var utilone_1 = require("../utils/utilone");
 var fullPath = "./assets/full/flower6.jpg";
 var thumbPath = "./assets/thumb/flower6_resize.jpg";
@@ -69,13 +71,24 @@ it('expects to be resolved', function () { return __awaiter(void 0, void 0, void
     });
 }); });
 describe('Test endpoint response', function () {
+    it('gets the api endpoint', function (done) { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, requestTwo.get('/')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    done();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('gets the images endpoint', function (done) { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .get('/')
-                        .query({ filename: 'flower6', width: 300, height: 600 })];
+                case 0: return [4 /*yield*/, requestOne.get('/?filename=flower6&width=300&height=600')];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(200);

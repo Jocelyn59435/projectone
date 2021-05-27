@@ -24,7 +24,7 @@ images.get('/', (req, res) => {
   // define paths for full image and thumb image
   const fullPath = `./assets/full/${filename}.jpg`;
   const thumbPath = `./assets/thumb/${filename}_resize.jpg`;
-  console.log(req.originalUrl);
+
   // first check whether the file exists or not
   if (checkFile(thumbPath)) {
     const img = getFile(thumbPath);
