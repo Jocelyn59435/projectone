@@ -40,81 +40,68 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var fs_1 = __importDefault(require("fs"));
 var utilone_1 = require("../../utils/utilone");
 var images = express_1.default.Router();
 // process get request from images route
 images.get('/', function (req, res) {
     var queryPara = req.query;
+    // check the number of query parameters, if it is not 3, return error message
+    if (Object.keys(req.query).length !== 3) {
+        res.end('Please provide all three parameters: filename, width and height.');
+        return;
+    }
     // get parameters from get request
     var filename = queryPara.filename;
     var width = parseInt(queryPara.width);
     var height = parseInt(queryPara.height);
     // define paths for full image and thumb image
     var fullPath = "./assets/full/" + filename + ".jpg";
-    var thumbPath = "./assets/thumb/" + filename + "_resize.jpg";
+    var thumbPath = "./assets/thumb/" + filename + "_" + width + "_" + height + "_resize.jpg";
+    // check filename parameter
+    if (!utilone_1.checkFile(fullPath) || req.query.filename === null) {
+        console.log('aa');
+        res.end("Please provide validate filename including\n  \n    flower1\n    flower2\n    flower3\n    flower4\n    flower5\n    flower6\n    flower7\n    flower8\n    flower9\n    qiaoyin\n     ");
+        return;
+    }
+    // check width parameter
+    if (isNaN(width) || req.query.width === null) {
+        res.end('Please provide validate width (should be number).');
+        return;
+    }
+    // check height parameter
+    if (isNaN(height) || req.query.height === null) {
+        res.end('Please provide validate height (should be number).');
+        return;
+    }
     // first check whether the file exists or not
     if (utilone_1.checkFile(thumbPath)) {
         var img = utilone_1.getFile(thumbPath);
-        var dimensions = utilone_1.getDimensions(img);
-        // if file exists, check wheter the current size is the same as the requested one
-        if (dimensions.width == width && dimensions.height == height) {
-            // if the size is same, just send the buffered one
-            res.end(img, 'binary');
-        }
-        else {
-            // if the size is not the same, delete the previous one and crop a new one
-            utilone_1.deleteFile(thumbPath);
-            (function () {
-                return __awaiter(this, void 0, void 0, function () {
-                    var img_1, error_1;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                _a.trys.push([0, 2, , 3]);
-                                // crop, save and send the image
-                                return [4 /*yield*/, utilone_1.cropImage(fullPath, thumbPath, width, height)];
-                            case 1:
-                                // crop, save and send the image
-                                _a.sent();
-                                img_1 = fs_1.default.readFileSync("./assets/thumb/" + filename + "_resize.jpg");
-                                res.end(img_1, 'binary');
-                                return [3 /*break*/, 3];
-                            case 2:
-                                error_1 = _a.sent();
-                                console.log(error_1);
-                                return [3 /*break*/, 3];
-                            case 3: return [2 /*return*/];
-                        }
-                    });
-                });
-            })();
-        }
+        // if file exists, send the cached one
+        res.end(img, 'binary');
+        return;
     }
-    else {
-        // if the file does not exist, crop, save and send the image
-        (function () {
-            return __awaiter(this, void 0, void 0, function () {
-                var img, error_2;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            _a.trys.push([0, 2, , 3]);
-                            return [4 /*yield*/, utilone_1.cropImage(fullPath, thumbPath, width, height)];
-                        case 1:
-                            _a.sent();
-                            img = utilone_1.getFile(thumbPath);
-                            res.end(img, 'binary');
-                            return [3 /*break*/, 3];
-                        case 2:
-                            error_2 = _a.sent();
-                            console.log(error_2);
-                            return [3 /*break*/, 3];
-                        case 3: return [2 /*return*/];
-                    }
-                });
+    // if there is not cached one, crop, save and send the image
+    (function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var img, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, utilone_1.cropImage(fullPath, thumbPath, width, height)];
+                    case 1:
+                        _a.sent();
+                        img = utilone_1.getFile(thumbPath);
+                        res.end(img, 'binary');
+                        return [2 /*return*/];
+                    case 2:
+                        error_1 = _a.sent();
+                        console.log(error_1);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
             });
-        })();
-    }
+        });
+    })();
 });
 exports.default = images;

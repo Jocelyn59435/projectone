@@ -44,16 +44,15 @@ var supertest_1 = __importDefault(require("supertest"));
 var request = supertest_1.default(index_1.default);
 var utilone_1 = require("../utils/utilone");
 var fullPath = "./assets/full/flower6.jpg";
-var thumbPath = "./assets/thumb/flower6_resize.jpg";
-var img = utilone_1.getFile(fullPath);
+var thumbPath = "./assets/thumb/flower6_300_600_resize.jpg";
 it('should whether flower6.jpg exists and return true', function () {
     expect(utilone_1.checkFile(fullPath)).toBeTruthy();
 });
 it('should get flower6.jpg', function () {
     expect(utilone_1.getFile(fullPath)).toBeTruthy();
 });
-it('should get dimensions of flower6.jpg', function () {
-    expect(utilone_1.getDimensions(img)).toBeTruthy();
+it('should get flower6_300_600_resize.jpg', function () {
+    expect(utilone_1.getFile(thumbPath)).toBeTruthy();
 });
 it('should throw an error when deleting an file which does not exist', function () {
     expect(utilone_1.deleteFile('./assets/thumb/ajax.jpg')).toThrowError;
@@ -61,7 +60,7 @@ it('should throw an error when deleting an file which does not exist', function 
 it('expects to be resolved', function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, utilone_1.cropImage("./assets/full/qiaoyin.jpg", "./assets/thumb/qiaoyin_resize.jpg", 300, 500)];
+            case 0: return [4 /*yield*/, utilone_1.cropImage("./assets/full/qiaoyin.jpg", "./assets/thumb/qiaoyin_300_500_resize.jpg", 300, 500)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];

@@ -8,19 +8,19 @@ interface queryObj {
   height?: string;
 }
 
-const checkFile = (path: string) => {
+const checkFile = (path: string): boolean => {
   return fs.existsSync(path);
 };
 
-const getFile = (path: string) => {
+const getFile = (path: string): Buffer => {
   return fs.readFileSync(path);
 };
 
-const getDimensions = (img: Buffer) => {
+const getDimensions = (img: Buffer): unknown => {
   return sizeOf(img);
 };
 
-const deleteFile = (path: string) => {
+const deleteFile = (path: string): void => {
   fs.unlink(path, err => console.log(err));
 };
 
@@ -29,7 +29,7 @@ const cropImage = async (
   outputPath: string,
   width: number,
   height: number
-) => {
+): Promise<void> => {
   await sharp(inputPath)
     .resize(width, height)
     .toFile(outputPath);

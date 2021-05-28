@@ -1,21 +1,12 @@
-import routes from '../routes/index';
-import fs from 'fs';
 import app from '../index';
 import supertest from 'supertest';
 
 const request = supertest(app);
 
-import {
-  checkFile,
-  getFile,
-  getDimensions,
-  deleteFile,
-  cropImage
-} from '../utils/utilone';
+import { checkFile, getFile, deleteFile, cropImage } from '../utils/utilone';
 
 const fullPath = `./assets/full/flower6.jpg`;
-const thumbPath = `./assets/thumb/flower6_resize.jpg`;
-const img = getFile(fullPath);
+const thumbPath = `./assets/thumb/flower6_300_600_resize.jpg`;
 
 it('should whether flower6.jpg exists and return true', () => {
   expect(checkFile(fullPath)).toBeTruthy();
@@ -25,8 +16,8 @@ it('should get flower6.jpg', () => {
   expect(getFile(fullPath)).toBeTruthy();
 });
 
-it('should get dimensions of flower6.jpg', () => {
-  expect(getDimensions(img)).toBeTruthy();
+it('should get flower6_300_600_resize.jpg', () => {
+  expect(getFile(thumbPath)).toBeTruthy();
 });
 
 it('should throw an error when deleting an file which does not exist', () => {
@@ -36,7 +27,7 @@ it('should throw an error when deleting an file which does not exist', () => {
 it('expects to be resolved', async () => {
   await cropImage(
     `./assets/full/qiaoyin.jpg`,
-    `./assets/thumb/qiaoyin_resize.jpg`,
+    `./assets/thumb/qiaoyin_300_500_resize.jpg`,
     300,
     500
   );
