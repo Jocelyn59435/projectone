@@ -23,7 +23,7 @@ If exact same image (with same width and height), a cached imaged will be loaded
 
 1. to run the project:
 npm start
-2. to build the project:
+2. to complie typescript to js:
 npm run build
 3. to format script with prettier:
 npm run prettier-format
